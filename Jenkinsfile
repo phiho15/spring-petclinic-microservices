@@ -4,7 +4,7 @@ def commitId = ''
 pipeline {
     agent any
     environment {
-        DOCKERHUB_REPO = 'ntquan87/petclinic' // ví dụ repo DockerHub của bạn
+        DOCKERHUB_REPO = 'hykura/petclinic' // ví dụ repo DockerHub của bạn
     }
 
     stages {
