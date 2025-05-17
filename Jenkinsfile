@@ -4,10 +4,9 @@ def commitId = ''
 pipeline {
     agent any
     environment {
-        DOCKERHUB_USER = credentials('dockerhub-username') // Jenkins Credential ID
-        DOCKERHUB_PASS = credentials('dockerhub-password') // Jenkins Credential ID
-        DOCKERHUB_REPO = 'yourdockerhubuser/petclinic'     // ví dụ: huy123/petclinic
+        DOCKERHUB_REPO = 'ntquan87/petclinic' // ví dụ repo DockerHub của bạn
     }
+
     stages {
         stage('Checkout') {
             steps {
@@ -39,18 +38,19 @@ pipeline {
             }
         }
 
-        stage('Build Docker Image') {
+        stage('Build & Push Docker Images') {
             when {
                 expression { globalServiceChanged.size() > 0 }
             }
             steps {
                 script {
-                    withDockerRegistry([ credentialsId: 'dockerhub', url: '' ]) {
-                        globalServiceChanged.each { svc ->
-                            dir("${svc}") {
-                                sh "docker build -t ${DOCKERHUB_REPO}-${svc}:${commitId} ."
-                                sh "docker push ${DOCKERHUB_REPO}-${svc}:${commitId}"
-                            }
+                    globalServiceChanged.each { svc ->
+                        dir("${svc}") {
+                            def imageTag = "${DOCKERHUB_REPO}-${svc}:${commitId}"
+                            echo "Building image: ${imageTag}"
+                            sh "docker build -t ${imageTag} ."
+                            echo "Pushing image: ${imageTag}"
+                            sh "docker push ${imageTag}"
                         }
                     }
                 }
