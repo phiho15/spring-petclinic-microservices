@@ -54,7 +54,6 @@ pipeline {
             steps {
                 sh 'whoami'
                 script {
-                    echo "Building image: ${imageTag}"
                     globalServiceChanged.each { svc ->
                         dir("${svc}") {
                             def imageTag = "${DOCKERHUB_REPO}-${svc}:${commitId}"
