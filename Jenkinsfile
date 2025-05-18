@@ -52,14 +52,16 @@ pipeline {
                 expression { globalServiceChanged.size() > 0 }
             }
             steps {
+                sh 'whoami'
                 script {
+                    echo "Building image: ${imageTag}"
                     globalServiceChanged.each { svc ->
                         dir("${svc}") {
                             def imageTag = "${DOCKERHUB_REPO}-${svc}:${commitId}"
                             echo "Building image: ${imageTag}"
-                            sh '../mvnw clean install -P buildDocker -DskipTests'
+                            sh 'sudo ../mvnw clean install -P buildDocker -DskipTests'
                             echo "Pushing image: ${imageTag}"
-                            sh "docker push ${imageTag}"
+                            sh "sudo docker push ${imageTag}"
                         }
                     }
                 }
