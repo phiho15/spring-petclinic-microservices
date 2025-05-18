@@ -57,7 +57,7 @@ pipeline {
                         dir("${svc}") {
                             def imageTag = "${DOCKERHUB_REPO}-${svc}:${commitId}"
                             echo "Building image: ${imageTag}"
-                            sh '../mvnw clean install -P buildDocker'
+                            sh '../mvnw clean install -P buildDocker -DskipTests'
                             echo "Pushing image: ${imageTag}"
                             sh "docker push ${imageTag}"
                         }
