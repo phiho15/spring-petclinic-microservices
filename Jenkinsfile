@@ -52,18 +52,24 @@ pipeline {
                 expression { globalServiceChanged.size() > 0 }
             }
             steps {
-                sh 'whoami'
                 script {
+                    def branches = [:]
+        
                     globalServiceChanged.each { svc ->
-                        dir("${svc}") {
-                            def imageTag = "${DOCKERHUB_REPO}${svc}:${commitId}"
-                            echo "Building image: ${imageTag}"
-                             sh '../mvnw clean install -P buildDocker -DskipTests'
-                             sh "docker tag springcommunity/${svc}:latest ${imageTag}"
-                            echo "Pushing image: ${imageTag}"
-                            sh "docker push ${imageTag}"
+                        branches[svc] = {
+                            dir("${svc}") {
+                                def imageTag = "${DOCKERHUB_REPO}${svc}:${commitId}"
+                                echo "Building image: ${imageTag}"
+                                sh '../mvnw clean install -P buildDocker -DskipTests'
+                                sh "docker tag springcommunity/${svc}:latest ${imageTag}"
+                                echo "Pushing image: ${imageTag}"
+                                sh "docker push ${imageTag}"
+                            }
                         }
                     }
+        
+                    // Run in parallel
+                    parallel branches
                 }
             }
         }
