@@ -59,7 +59,7 @@ pipeline {
                             def imageTag = "${DOCKERHUB_REPO}${svc}:${commitId}"
                             echo "Building image: ${imageTag}"
                              sh '../mvnw clean install -P buildDocker -DskipTests'
-                             sh "docker tag hykura/${svc}:latest ${imageTag}"
+                             sh "docker tag springcommunity/${svc}:latest ${imageTag}"
                             echo "Pushing image: ${imageTag}"
                             sh "docker push ${imageTag}"
                         }
