@@ -47,7 +47,6 @@ pipeline {
                 }
             }
         }
-
         stage('Build & Push Docker Images') {
             when {
                 expression { globalServiceChanged.size() > 0 }
@@ -58,7 +57,7 @@ pipeline {
                         dir("${svc}") {
                             def imageTag = "${DOCKERHUB_REPO}-${svc}:${commitId}"
                             echo "Building image: ${imageTag}"
-                            sh "docker build -t ${imageTag} ."
+                            sh '../mvnw clean install -P buildDocker'
                             echo "Pushing image: ${imageTag}"
                             sh "docker push ${imageTag}"
                         }
@@ -66,7 +65,7 @@ pipeline {
                 }
             }
         }
-
+        
         // stage('Deploy to Kubernetes') {
         //     steps {
         //         script {
