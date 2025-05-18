@@ -4,7 +4,7 @@ def commitId = ''
 pipeline {
     agent any
     environment {
-        DOCKERHUB_REPO = 'hykura/petclinic' // Thay bằng repo DockerHub của bạn
+        DOCKERHUB_REPO = 'hykura/' // Thay bằng repo DockerHub của bạn
         KUBE_NAMESPACE = 'petclinic-dev'    // Namespace K8s bạn muốn deploy
     }
 
@@ -56,10 +56,10 @@ pipeline {
                 script {
                     globalServiceChanged.each { svc ->
                         dir("${svc}") {
-                            def imageTag = "${DOCKERHUB_REPO}-${svc}:${commitId}"
+                            def imageTag = "${DOCKERHUB_REPO}${svc}:${commitId}"
                             echo "Building image: ${imageTag}"
                              sh '../mvnw clean install -P buildDocker -DskipTests'
-                             sh "docker tag ${svc}:latest ${imageTag}"
+                             sh "docker tag hykura/${svc}:latest ${imageTag}"
                             echo "Pushing image: ${imageTag}"
                             sh "docker push ${imageTag}"
                         }
