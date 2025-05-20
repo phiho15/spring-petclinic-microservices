@@ -24,7 +24,7 @@ import org.springframework.beans.support.PropertyComparator;
 import java.util.*;
 
 /**
- * Simple JavaBean domain object representing a veterinarian.
+ * Simple JavaBean domain object representing a veterinarian. 32423424234
  *
  * @author Ken Krebs
  * @author Juergen Hoeller
