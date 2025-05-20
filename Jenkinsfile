@@ -43,7 +43,9 @@ pipeline {
             steps {
                 script {
                     def branches = [:]
-                    echo whoami
+                    // echo whoami and pwd
+                    sh 'whoami'
+                    sh 'pwd'
                     globalServiceChanged.each { svc ->
                         branches[svc] = {
                             dir("${svc}") {
